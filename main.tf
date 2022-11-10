@@ -1,11 +1,12 @@
-data "azurerm_resource_group" "Portfolio-RG" { //not quite shure it should be there, need to ask 
-  name = "Portfolio-RG"
+resource "azurerm_resource_group" "Mateusz-Kiszka-RG-Kubernates" {
+  name     = "Mateusz-Kiszka-RG-Kubernates"
+  location = "West Europe"
 }
 
 module "Kubernates" {
   source                = "./modules/kubernates"
-  resource_group_name   = data.azurerm_resource_group.Portfolio-RG.name
-  cluster-location      = data.azurerm_resource_group.Portfolio-RG.location
+  resource_group_name   = azurerm_resource_group.Mateusz-Kiszka-RG-Kubernates.name
+  cluster-location      = azurerm_resource_group.Mateusz-Kiszka-RG-Kubernates.location
   node-pool-size        = var.node-pool-size
   dns-prefix            = var.dns-prefix
   node-pool-name        = var.node-pool-name
