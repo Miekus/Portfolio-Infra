@@ -19,3 +19,6 @@ variable "note-pool-vm-size" {
 variable "node-pool-name" {
     type = string
 }
+variable "vnet-subnet-id"{
+    type = string
+}

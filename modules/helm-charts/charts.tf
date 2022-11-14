@@ -1,16 +1,11 @@
-# resource "helm_release" "nginx_ingress" {
-#   name             = "nginx-ingress"
-#   chart            = "/home/ubuntu/jenkins/git/demo-crm/nginx/nginx-ingress"
-#   namespace        = "ingress"
-#   create_namespace = "true"
-# }
 
-resource "helm_release" "argo_cd" {
+
+resource "helm_release" "argo" {
   name             = "argo"
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
-  version          = "4.8.2"
-  namespace        = "gitops"
+  version          = "5.13.8"
+  namespace        = "default"
   create_namespace = true
 
   set {
