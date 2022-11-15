@@ -43,3 +43,20 @@ resource "azurerm_role_assignment" "role-assignment" {
   scope                            = data.azurerm_container_registry.container-registry.id
   skip_service_principal_aad_check = true
 }
+
+data "azurerm_key_vault" "key-vault" {
+  name                = "MK-KeyVault"
+  resource_group_name = "Mateusz-Kiszka-RG"
+}
+
+data "azuread_client_config" "current" {}
+
+
+resource "azurerm_key_vault_access_policy" "key-vault-access-policy" {
+  key_vault_id = data.azurerm_key_vault.key-vault.id
+  tenant_id    = data.azuread_client_config.current.tenant_id
+  object_id    = data.azuread_client_config.current.object_id
+
+  secret_permissions = ["Delete", "Get", "List", "Set"]
+  storage_permissions  = ["Delete", "Get", "List", "Set"]
+}
