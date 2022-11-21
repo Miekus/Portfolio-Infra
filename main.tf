@@ -24,6 +24,16 @@ module "Kubernates" {
   note-pool-vm-size     = var.note-pool-vm-size
 }
 
+module "Secrets" {
+  depends_on = [
+    module.kubernates
+  ]
+  source                = "./modules/secret-manager"
+}
+
 module "Helm" {
+  depends_on = [
+    module.Secrets
+  ]
   source                = "./modules/helm-charts"
 }
