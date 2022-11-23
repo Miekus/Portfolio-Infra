@@ -30,14 +30,14 @@ resource "azurerm_kubernetes_cluster" "aks" {
   }
 }
 
-resource "null_resource" "Kubectl" {
-  provisioner "local-exec" {
-    command = "az aks get-credentials --name ${var.cluster-name} --overwrite-existing --resource-group ${var.resource_group_name}"
-  }
-  depends_on = [
-    azurerm_kubernetes_cluster.aks
-  ]
-}
+# resource "null_resource" "Kubectl" {
+#   provisioner "local-exec" {
+#     command = "az aks get-credentials --name ${var.cluster-name} --overwrite-existing --resource-group ${var.resource_group_name}"
+#   }
+#   depends_on = [
+#     azurerm_kubernetes_cluster.aks
+#   ]
+# }
 
 data "azurerm_container_registry" "container-registry" {
   name                = "MateuszKiszkaFlaskApp"
@@ -51,29 +51,29 @@ resource "azurerm_role_assignment" "role-assignment" {
   skip_service_principal_aad_check = true
 }
 
-data "azurerm_key_vault" "key-vault" {
-  name                = "MK-KeyVault"
-  resource_group_name = "Mateusz-Kiszka-RG"
-}
+# data "azurerm_key_vault" "key-vault" {
+#   name                = "MK-KeyVault"
+#   resource_group_name = "Mateusz-Kiszka-RG"
+# }
 
-data "azuread_client_config" "current" {}
+# data "azuread_client_config" "current" {}
 
 
-resource "azurerm_key_vault_access_policy" "key-vault-access-policy" {
-  depends_on = [
-    null_resource.Kubectl
-  ]
-  key_vault_id = data.azurerm_key_vault.key-vault.id
-  tenant_id    = data.azuread_client_config.current.tenant_id
-  object_id    = data.azuread_client_config.current.object_id
+# resource "azurerm_key_vault_access_policy" "key-vault-access-policy" {
+#   depends_on = [
+#     null_resource.Kubectl
+#   ]
+#   key_vault_id = data.azurerm_key_vault.key-vault.id
+#   tenant_id    = data.azuread_client_config.current.tenant_id
+#   object_id    = data.azuread_client_config.current.object_id
 
-  secret_permissions = ["Delete", "Get", "List", "Set"]
-  storage_permissions  = ["Delete", "Get", "List", "Set"]
-}
+#   secret_permissions = ["Delete", "Get", "List", "Set"]
+#   storage_permissions  = ["Delete", "Get", "List", "Set"]
+# }
 
-resource "azurerm_role_assignment" "role-assignmen-kv" {
-  principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
-  role_definition_name             = "Key Vault Secrets Officer"
-  scope                            = data.azurerm_key_vault.key-vault.id
-  skip_service_principal_aad_check = true
-}
+# resource "azurerm_role_assignment" "role-assignmen-kv" {
+#   principal_id                     = azurerm_kubernetes_cluster.aks.kubelet_identity[0].object_id
+#   role_definition_name             = "Key Vault Secrets Officer"
+#   scope                            = data.azurerm_key_vault.key-vault.id
+#   skip_service_principal_aad_check = true
+# }
